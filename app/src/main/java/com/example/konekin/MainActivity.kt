@@ -4,51 +4,37 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.konekin.databinding.ActivityMainBinding
 import com.example.konekin.model.Users
 import com.example.konekin.network.ApiClient
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.statusBars()
-            )
-
-            view.setPadding(
-                view.paddingLeft,
-                insets.top,
-                view.paddingRight,
-                view.paddingBottom
-            )
-
-            windowInsets
-        }
-
         val client = ApiClient.getInstance()
         val response = client.getAllUsers()
-        val userList = ArrayList<String>()
 
-        response.enqueue(object : retrofit2.Callback<Users> {
+        response.enqueue(object : Callback<Users> {
+
             override fun onResponse(
-                call: retrofit2.Call<Users>,
+                call: Call<Users>,
                 response: Response<Users>
             ) {
                 if (response.isSuccessful && response.body() != null) {
+
                     val users = response.body()!!.data
+                    val userList = ArrayList<String>()
 
                     for (i in users) {
                         userList.add(i.employeeName)
@@ -62,7 +48,9 @@ class MainActivity : AppCompatActivity() {
 
                     binding.lvNama.adapter = listAdapter
 
-                    binding.lvNama.setOnItemClickListener { _, _, position, _ ->
+                    binding.lvNama.setOnItemClickListener {
+                            _, _, position, _ ->
+
                         val selectedUser = users[position]
 
                         val intent = Intent(
@@ -73,17 +61,18 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("USER_ID", selectedUser.id)
                         startActivity(intent)
                     }
+
                 } else {
                     Toast.makeText(
                         this@MainActivity,
-                        "Gagal mengambil data employee",
+                        "Gagal mengambil data employee. HTTP ${response.code()}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
 
             override fun onFailure(
-                call: retrofit2.Call<Users>,
+                call: Call<Users>,
                 t: Throwable
             ) {
                 Toast.makeText(

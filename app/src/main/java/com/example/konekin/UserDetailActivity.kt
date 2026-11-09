@@ -23,6 +23,16 @@ class UserDetailActivity : AppCompatActivity() {
         val tvAge = findViewById<TextView>(R.id.tvAge)
         val tvSalary = findViewById<TextView>(R.id.tvSalary)
 
+        if (userId == -1) {
+            Toast.makeText(
+                this,
+                "ID employee tidak ditemukan",
+                Toast.LENGTH_LONG
+            ).show()
+            finish()
+            return
+        }
+
         val client = ApiClient.getInstance()
         val response = client.getUserDetail(userId)
 
@@ -44,7 +54,7 @@ class UserDetailActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this@UserDetailActivity,
-                        "HTTP ${response.code()}: ${response.errorBody()?.string()}",
+                        "Gagal mengambil detail employee. HTTP ${response.code()}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
