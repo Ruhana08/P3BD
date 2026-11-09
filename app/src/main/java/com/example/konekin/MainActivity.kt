@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.konekin.databinding.ActivityMainBinding
 import com.example.konekin.model.Users
 import com.example.konekin.network.ApiClient
@@ -21,6 +24,22 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = true
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            view.setPadding(
+                view.paddingLeft,
+                statusBar.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+
+            insets
+        }
 
         val client = ApiClient.getInstance()
         val response = client.getAllUsers()
