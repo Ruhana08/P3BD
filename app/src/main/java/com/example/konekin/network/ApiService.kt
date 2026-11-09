@@ -1,12 +1,13 @@
 package com.example.konekin.network
 
 import com.example.konekin.model.Users
+import com.example.konekin.model.UserDetail
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
-import com.example.konekin.model.UserDetail
 
 interface ApiService {
+
     @GET("employees")
     fun getAllUsers(): Call<Users>
 
