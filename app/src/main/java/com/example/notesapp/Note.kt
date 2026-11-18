@@ -12,7 +12,8 @@ import com.example.notesapp.ui.theme.NotesAppTheme
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val title: String
+    val title: String,
+    val note: String
 )
 
 @Composable
@@ -27,6 +28,10 @@ fun NoteItem(note: Note) {
 @Composable
 fun NoteItemPreview() {
     NotesAppTheme {
-        NoteItem(note = Note(id = 1, title = "Belajar Room Database"))
+        NoteItem(note = Note(
+            id = 1,
+            title = "Belajar Room Database",
+            note = "Mempelajari CRUD menggunakan Room Database"
+        ))
     }
 }
